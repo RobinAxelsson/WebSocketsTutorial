@@ -5,4 +5,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\u2b_Server-Client_Library\u2b_Client_Server_Library.csproj" />
+  </ItemGroup>
+
 </Project>
