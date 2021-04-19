@@ -33,28 +33,35 @@ namespace u2b_Client
             socket.Connect(endpoint);
             var networkStream = new NetworkStream(socket, true);
 
-            var myMessage = new MyMessage
-            {
-                IntProperty = 404,
-                StringProperty = "Hello World"
-            };
+            string GET = File.ReadAllText(@"C:\Users\axels\Google Drive\Code\VStudio_source\repos\u2b_Server-Client\u2b_Client\GET_Request.txt");
+
+            //var myMessage = new MyMessage
+            //{
+            //    IntProperty = 404,
+            //    StringProperty = "Hello World"
+            //};
 
             Console.WriteLine("Sending");
-            Print(myMessage);
+            //Print(myMessage);
+            var bytesToSend = Encoding.UTF8.GetBytes(GET);
+            await networkStream.WriteAsync(bytesToSend, 0, bytesToSend.Length).ConfigureAwait(false);
 
-            var protocol = new XmlMessageProtocol();
+            var buffer = new byte[16384];
+            var bytesReceived = await networkStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+            var messageReceived = Encoding.UTF8.GetString(buffer);
+            //var protocol = new XmlMessageProtocol();
             //var protocol = new JsonMessageProtocol();
-            await protocol.SendAsync(networkStream, myMessage).ConfigureAwait(false);
+            //await protocol.SendAsync(networkStream, myMessage).ConfigureAwait(false);
 
             //await SendAsync(networkStream, myMessage).ConfigureAwait(false);
             //var responseMsg = await ReceiveAsync<MyMessage>(networkStream).ConfigureAwait(false);
 
-            var responseMsg = await protocol.ReceiveAsync(networkStream).ConfigureAwait(false);
-            var response = Convert(responseMsg);
+            //var responseMsg = await protocol.ReceiveAsync(networkStream).ConfigureAwait(false);
+            //var response = Convert(responseMsg);
 
-            Console.WriteLine("Received");
+            Console.WriteLine("Received:\n\n" + messageReceived);
             //Console.WriteLine(responsMsg.ToString());
-            Print(response);
+            //Print(response);
 
             Console.ReadLine();
         }

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace u2b_Server
@@ -10,7 +12,7 @@ namespace u2b_Server
         public void Start(int port = 9000)
         {
             var endPoint = new IPEndPoint(IPAddress.Loopback, port); //loopback - only listening to the 121.0.0.1 -not listening on the network.
-
+            
             var socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(endPoint);
             socket.Listen(128);
@@ -40,12 +42,21 @@ namespace u2b_Server
                     do
                     {
                         int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
-
+                        string message = Encoding.UTF8.GetString(buffer);
+                        Console.WriteLine(message);
+                        //var headerBytes = await ReadAsync(networkStream, HEADER_SIZE).ConfigureAwait(false);
+                        //return IPAddress.NetworkToHostOrder(BitConverter.ToInt32(headerBytes));
+                        
                         if (bytesRead == 0)
                             break;
+                        //string html = File.ReadAllText(@"C:\Users\axels\Google Drive\Code\VS Code\Frontend\CoreFoundamentals_LinkSaver\index.html");
+                        //html = "HTTP/1.1 200 OK\n\n" + html;
+                        //var responseBytes = Encoding.UTF8.GetBytes(html);
+                        
                         //The connection is not physical so the client can do a bad disconnection and the server will never know.
 
-                        await stream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+                        //await stream.WriteAsync(responseBytes, 0, responseBytes.Length).ConfigureAwait(false);
+                        //await stream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
                     } while (true);
                 }
 
